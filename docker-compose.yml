@@ -1,0 +1,39 @@
+
+services:
+  backend:
+    container_name: teta-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+#      target: production
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      - db
+    networks:
+      - teta-network
+
+  db:
+    container_name: teta-db
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "55432:5432"
+    volumes:
+      - teta-db-data:/var/lib/postgresql/data
+    networks:
+      - teta-network
+
+networks:
+  teta-network:
+    driver: bridge
+
+volumes:
+  teta-db-data:
+    driver: local
