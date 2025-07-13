@@ -3,12 +3,15 @@ services:
   backend:
     container_name: teta-backend
     build:
-      context: .
+      context: ./teta-backend
       dockerfile: Dockerfile
 #      target: production
     restart: unless-stopped
     ports:
       - "3000:3000"
+    volumes:
+      - ./teta-backend:/usr/src/app
+      - /usr/src/app/node_modules
     env_file: .env
     depends_on:
       - db
