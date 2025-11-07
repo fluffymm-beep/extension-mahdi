@@ -17,6 +17,8 @@ services:
       - db
     networks:
       - teta-network
+    mem_limit: 512m      # حداکثر 512 مگابایت RAM
+    cpus: 0.5 
 
   db:
     container_name: teta-db
@@ -27,11 +29,19 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "55432:5432"
+      - "127.0.0.1:55432:5432"
     volumes:
       - teta-db-data:/var/lib/postgresql/data
     networks:
       - teta-network
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: "0.50"         # حداکثر 50% از یک هسته
+        reservations:
+          memory: 256M
+          cpus: "0.20"         # حداقل نیاز به 25% از یک
 
 networks:
   teta-network:
